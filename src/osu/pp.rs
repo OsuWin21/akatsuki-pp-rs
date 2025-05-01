@@ -461,7 +461,7 @@ impl OsuPpInner {
 
     fn compute_aim_value(&self) -> f64 {
         if self.mods.ap() {
-            return 0.5; // Allow Aim to still counted with difficulty
+            return 0.3; // Allow Aim to still counted with difficulty
         }
 
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
