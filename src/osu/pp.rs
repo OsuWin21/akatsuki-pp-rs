@@ -402,6 +402,10 @@ impl OsuPpInner {
 
         let mut multiplier = PERFORMANCE_BASE_MULTIPLIER;
 
+        if self.mods.ap() {
+            multiplier *= 0.85; // Reduce AP Base Multiplier
+        }
+
         if self.mods.nf() {
             multiplier *= (1.0 - 0.02 * self.effective_miss_count).max(0.9);
         }
@@ -457,7 +461,7 @@ impl OsuPpInner {
 
     fn compute_aim_value(&self) -> f64 {
         if self.mods.ap() {
-            return 0.0;
+            // return 0.0; # Allow Aim to scale with difficulty
         }
 
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
@@ -541,7 +545,7 @@ impl OsuPpInner {
         }
 
         let ar_factor = if self.mods.ap() {
-            0.0
+            0.5
         } else if self.attrs.ar > 10.33 {
             0.3 * (self.attrs.ar - 10.33)
         } else {
