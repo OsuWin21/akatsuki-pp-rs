@@ -399,7 +399,7 @@ impl OsuPpInner {
         }
 
         let total_hits = total_hits as f64;
-        
+
         let mut GLOBAL_PP_MULTIPLIER = 2.0;
 
         let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * GLOBAL_PP_MULTIPLIER; 
@@ -463,7 +463,7 @@ impl OsuPpInner {
 
     fn compute_aim_value(&self) -> f64 {
         if self.mods.ap() {
-            return 0.0; 
+            return 0.3; 
         }
 
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;

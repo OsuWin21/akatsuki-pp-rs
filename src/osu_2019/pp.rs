@@ -242,7 +242,7 @@ impl<'m> OsuPP<'m> {
         self.assert_hitresults();
 
         let total_hits = self.total_hits() as f32;
-        let mut multiplier = 1.09;
+        let mut multiplier = 2.0;
 
         let effective_miss_count = self.calculate_effective_miss_count();
 
@@ -264,7 +264,7 @@ impl<'m> OsuPP<'m> {
 
         if streams_nerf < 1.09 {
             let acc_factor = (1.0 - self.acc.unwrap()).abs();
-            acc_depression = (0.86 - acc_factor).max(0.5);
+            acc_depression = (0.9 - acc_factor).max(0.5);
 
             if acc_depression > 0.0 {
                 aim_value *= acc_depression;
@@ -283,16 +283,16 @@ impl<'m> OsuPP<'m> {
             * multiplier;
 
         if self.mods.dt() && self.mods.hr() {
-            pp *= 1.025;
+            pp *= 1.1;
         }
 
         if self.map.creator == "gwb" || self.map.creator == "Plasma" {
-            pp *= 0.9;
+            pp *= 1.0;
         }
 
         pp *= match self.map.beatmap_id {
             // Louder than steel [ok this is epic]
-            1808605 => 0.85,
+            1808605 => 0.9,
 
             // over the top [Above the stars]
             1821147 => 0.70,
