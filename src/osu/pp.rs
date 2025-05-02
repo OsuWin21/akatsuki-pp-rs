@@ -525,7 +525,7 @@ impl OsuPpInner {
 
     fn compute_speed_value(&self) -> f64 {
         if self.mods.rx() {
-            return 0.0;
+            return 0.3;
         }
 
         let mut speed_value =

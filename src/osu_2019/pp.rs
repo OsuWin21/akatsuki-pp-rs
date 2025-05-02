@@ -252,8 +252,8 @@ impl<'m> OsuPP<'m> {
                 1.0 - (self.attributes.as_ref().unwrap().n_spinners as f32 / total_hits).powf(0.85);
         }
 
-        let mut aim_value = self.compute_aim_value(total_hits, effective_miss_count);
-        let speed_value = self.compute_speed_value(total_hits, effective_miss_count);
+        let mut aim_value = self.compute_aim_value(total_hits, effective_miss_count) * multiplier;
+        let speed_value = self.compute_speed_value(total_hits, effective_miss_count) * multiplier;
         let acc_value = self.compute_accuracy_value(total_hits);
 
         let mut acc_depression = 1.0;
