@@ -547,7 +547,7 @@ impl OsuPpInner {
         let ar_factor = if self.mods.ap() {
             0.5
         } else if self.attrs.ar > 10.33 {
-            0.3 * (self.attrs.ar - 10.33)
+            0.7 * (self.attrs.ar - 10.33)
         } else {
             0.0
         };
