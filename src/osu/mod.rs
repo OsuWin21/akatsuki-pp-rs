@@ -147,14 +147,14 @@ impl<'map> OsuStars<'map> {
 
         if mods.rx() {
             aim_rating *= 1.0;
-            speed_rating *= 0.0;
+            speed_rating *= 0.2;
             flashlight_rating *= 0.7;
         }
 
         if mods.ap() {
-            aim_rating *= 0.3;
-            speed_rating *= 1.5;
-            flashlight_rating *= 0.5;
+            aim_rating *= 0.4;
+            speed_rating *= 1.2;
+            flashlight_rating *= 0.4;
         }
 
         let base_aim_performance = (5.0 * (aim_rating / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;

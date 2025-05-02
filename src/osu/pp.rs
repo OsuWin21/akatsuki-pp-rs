@@ -400,7 +400,9 @@ impl OsuPpInner {
 
         let total_hits = total_hits as f64;
 
-        let mut multiplier = PERFORMANCE_BASE_MULTIPLIER;
+        GLOBAL_PP_MULTIPLIER = 2.5;
+
+        let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * GLOBAL_PP_MULTIPLIER ;
 
         if self.mods.ap() {
             multiplier *= 1.5; // Reduce AP Base Multiplier
