@@ -403,7 +403,7 @@ impl OsuPpInner {
         let mut multiplier = PERFORMANCE_BASE_MULTIPLIER;
 
         if self.mods.ap() {
-            multiplier *= 0.85; // Reduce AP Base Multiplier
+            multiplier *= 0.8; // Reduce AP Base Multiplier
         }
 
         if self.mods.nf() {
