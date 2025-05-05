@@ -391,10 +391,10 @@ impl<'m> OsuPP<'m> {
 
         // EZ bonus
         if self.mods.ez() {
-            let mut base_buff = 1.08_f32;
+            let mut base_buff = 1.5_f32;
 
             if attributes.ar <= 8.0 {
-                base_buff += (7.0 - attributes.ar as f32) / 100.0;
+                base_buff += (8.0 - attributes.ar as f32) / 100.0;
             }
 
             aim_value *= base_buff;

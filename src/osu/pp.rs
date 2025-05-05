@@ -516,6 +516,16 @@ impl OsuPpInner {
             aim_value *= slider_nerf_factor;
         }
 
+        if self.mods.ez() {
+            let mut base_buff = 1.5_f32;
+
+            if attributes.ar <= 8.0 {
+                base_buff += (8.0 - attributes.ar as f32) / 100.0;
+            }
+
+            aim_value *= base_buff;
+        }
+
         aim_value *= self.acc;
         // * It is important to consider accuracy difficulty when scaling with accuracy.
         aim_value *= 0.98 + self.attrs.od * self.attrs.od / 2500.0;
