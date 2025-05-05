@@ -404,8 +404,11 @@ impl OsuPpInner {
 
         let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * GLOBAL_PP_MULTIPLIER; 
 
-        if self.mods.ap() {
-            multiplier *= 1.5; // Reduce AP Base Multiplier
+        // Remove AP PP if EZ is enabled (THIS AP PP IS ALREADY EASY ENOUGH STUPID)
+        if self.mods.ez() && self.mods.ap() {
+            multiplier *= 0.0; 
+        } else if self.mods.ap() {
+            multiplier *= 1.5; // Buff AP PP
         }
 
         if self.mods.nf() {
@@ -516,6 +519,7 @@ impl OsuPpInner {
             aim_value *= slider_nerf_factor;
         }
 
+        // * Buff for lower AR when it comes to aim and EZ Mods.
         if self.mods.ez() {
             let mut base_buff = 1.5_f64;
 
