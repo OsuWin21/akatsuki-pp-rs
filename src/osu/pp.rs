@@ -517,10 +517,10 @@ impl OsuPpInner {
         }
 
         if self.mods.ez() {
-            let mut base_buff = 1.5_f32;
+            let mut base_buff = 1.5_f64;
 
-            if attributes.ar <= 8.0 {
-                base_buff += (8.0 - attributes.ar as f32) / 100.0;
+            if attrs.ar <= 8.0 {
+                base_buff += (8.0 - attrs.ar as f64) / 100.0;
             }
 
             aim_value *= base_buff;
