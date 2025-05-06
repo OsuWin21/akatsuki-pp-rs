@@ -406,8 +406,8 @@ impl<'m> OsuPP<'m> {
         }
 
         // Scale with accuracy
-        aim_value *= 0.3 + self.acc.unwrap() / 2.0;
-        aim_value *= 0.98 + attributes.od as f32 * attributes.od as f32 / 2500.0;
+        aim_value *= 0.5 + self.acc.unwrap() / 1.5;
+        aim_value *= 0.98 + attributes.od as f32 * attributes.od as f32 / 2000.0;
 
         aim_value
     }
@@ -523,7 +523,7 @@ impl<'m> OsuPP<'m> {
         if attributes.n_sliders > 0 {
             let fc_threshold = attributes.max_combo as f32 - (0.1 * attributes.n_sliders as f32);
             if combo < fc_threshold {
-                combo_based_miss_count = fc_threshold / combo.max(1.0);
+                combo_based_miss_count = fc_threshold / combo.max(1.5);
             }
         }
 
