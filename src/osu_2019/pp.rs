@@ -472,12 +472,9 @@ impl<'m> OsuPP<'m> {
         let n100 = self.n100.unwrap_or(0) as f32;
         let n50 = self.n50.unwrap_or(0) as f32;
 
-        let better_acc_percentage = (n_circles > 0.0) as u8 as f32
-            * (((n300 - (total_hits - n_circles)) * 6.0 + n100 * 2.0 + n50) / (n_circles * 6.0))
-                .max(0.0);
+        let better_acc_percentage = (n_circles > 0.0) as u8 as f32 * (((n300 - (total_hits - n_circles)) * 6.0 + n100 * 2.0 + n50) / (n_circles * 6.0)).max(0.0);
 
-        let mut acc_value =
-            1.52163_f32.powf(attributes.od as f32) * better_acc_percentage.powi(24) * 2.83;
+        let mut acc_value = 1.52163_f32.powf(attributes.od as f32) * better_acc_percentage.powi(15) * 2.83;
 
         // Bonus for many hitcircles
         acc_value *= ((n_circles as f32 / 1000.0).powf(0.3)).min(1.15);
