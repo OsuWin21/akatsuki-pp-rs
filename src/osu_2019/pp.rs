@@ -505,7 +505,7 @@ impl<'m> OsuPP<'m> {
         let total_hits = self.total_hits() as f32;
 
         0.98 * (1.0 - (effective_miss_count / total_hits).powf(0.5))
-            .powf(1.0 + effective_miss_count)
+            .powf(1.0 + effective_miss_count);
         
         base_penalty - (effective_miss_count * 0.01)
     }
