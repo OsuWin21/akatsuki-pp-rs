@@ -534,7 +534,7 @@ impl OsuPpInner {
         // * It is important to consider accuracy difficulty when scaling with accuracy.
         aim_value *= 0.98 + self.attrs.od * self.attrs.od / 2500.0;
 
-        aim_value
+        aim_value * 3.0
     }
 
     fn compute_speed_value(&self) -> f64 {
@@ -604,6 +604,10 @@ impl OsuPpInner {
                 * (self.state.n50 as f64 - total_hits / 500.0),
         );
 
+        if self.mods.ez() && self.mods.ap() {
+            speed_value *= 0.3; 
+        }
+        
         speed_value
     }
 
