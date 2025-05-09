@@ -504,7 +504,7 @@ impl<'m> OsuPP<'m> {
     fn calculate_miss_penalty(&self, effective_miss_count: f32) -> f32 {
         let total_hits = self.total_hits() as f32;
 
-        0.98 * (1.0 - (effective_miss_count / total_hits).powf(0.5))
+        let base_penalty = 0.98 * (1.0 - (effective_miss_count / total_hits).powf(0.5))
             .powf(1.0 + effective_miss_count);
         
         base_penalty - (effective_miss_count * 0.01)
