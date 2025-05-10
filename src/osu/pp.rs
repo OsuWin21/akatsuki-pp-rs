@@ -504,6 +504,16 @@ impl OsuPpInner {
             aim_value *= 1.0 + 0.04 * (12.0 - self.attrs.ar);
         }
 
+        // Buff Stream aim maybe?
+        let stream_multiplier = if self.mods.ap() {
+            let stream_factor = self.attrs.speed_note_count / total_hits;
+            1.0 + 0.3 * stream_factor
+        } else {
+            1.0
+        };
+
+        aim_value *= stream_multiplier;
+
         // * We assume 15% of sliders in a map are difficult since there's no way to tell from the performance calculator.
         let estimate_diff_sliders = self.attrs.n_sliders as f64 * 0.15;
 
@@ -693,8 +703,13 @@ impl OsuPpInner {
     fn get_combo_scaling_factor(&self) -> f64 {
         if self.attrs.max_combo == 0 {
             1.0
+
+        // PLEASE..... AP IS STUPID
+        } else if self.mods.ap() {
+            ((self.state.max_combo as f64).powf(0.9) / (self.attrs.max_combo as f64).powf(0.9))
+                .min(1.0)
         } else {
-            ((self.state.max_combo as f64).powf(0.8) / (self.attrs.max_combo as f64).powf(0.8))
+            ((self.state.max_combo as f64).powf(0.9) / (self.attrs.max_combo as f64).powf(0.9))
                 .min(1.0)
         }
     }
