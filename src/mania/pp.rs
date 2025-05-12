@@ -74,6 +74,7 @@ impl<'map> ManiaPP<'map> {
             n100: None,
             n50: None,
             n_misses: None,
+            score: None,
             acc: None,
             hitresult_priority: None,
         }
