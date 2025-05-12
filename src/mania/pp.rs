@@ -46,6 +46,7 @@ pub struct ManiaPP<'map> {
     mods: u32,
     passed_objects: Option<usize>,
     clock_rate: Option<f64>,
+    score: Option<usize>,
 
     pub(crate) n320: Option<usize>,
     pub(crate) n300: Option<usize>,
