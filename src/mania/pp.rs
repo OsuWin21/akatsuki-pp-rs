@@ -528,12 +528,18 @@ impl ManiaPpInner {
     }
 
     fn compute_difficulty_value(&self) -> f64 {
-        // * Star rating to pp curve
-        (self.attrs.stars - 0.15).max(0.05).powf(2.2)
-             // * From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
-             * (5.0 * self.calculate_custom_accuracy() - 4.0).max(0.0)
-             // * Length bonus, capped at 1500 notes
-             * (1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0))
+        // * 2017 Mania PP System
+        let strain_value = (5.0 * (self.attrs.stars.powf(0.825)).max(1.0) - 4.0).powi(3) / 100_000.0;
+
+        let length_bonus = 1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0);
+
+        strain_value * length_bonus
+        // // * Star rating to pp curve
+        // (self.attrs.stars - 0.15).max(0.05).powf(2.2)
+        //      // * From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
+        //      * (5.0 * self.calculate_custom_accuracy() - 4.0).max(0.0)
+        //      // * Length bonus, capped at 1500 notes
+        //      * (1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0))
     }
 
     fn total_hits(&self) -> f64 {
@@ -556,10 +562,16 @@ impl ManiaPpInner {
             return 0.0;
         }
 
-        let numerator = *n320 * 32 + *n300 * 30 + *n200 * 20 + *n100 * 10 + *n50 * 5;
-        let denominator = total_hits * 32;
+        let accuracy = (*n320 * 32 + *n300 * 30 + *n200 * 20 + *n100 * 10 + *n50 * 5) as f64 / (total_hits * 32) as f64;
 
-        numerator as f64 / denominator as f64
+        // * 2017 Mania PP System
+        let hit_window = self.attrs.hit_window;
+        let accuracy_value =  (150.0 / hit_window) * (accuracy.powi(16)).powf(1.8) * 2.5 * (1.15_f64.min((total_hits as f64 / 1500.0).powf(0.3)));
+
+        // let numerator = *n320 * 32 + *n300 * 30 + *n200 * 20 + *n100 * 10 + *n50 * 5;
+        // let denominator = total_hits * 32;
+
+        // numerator as f64 / denominator as f64
     }
 }
 
