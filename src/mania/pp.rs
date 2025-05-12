@@ -260,7 +260,6 @@ impl<'map> ManiaPP<'map> {
         let mut n50 = self.n50.unwrap_or(0);
         let n_misses = self.n_misses.unwrap_or(0);
 
-        let score_value = n320 * 320 + n300 * 300 + n200 * 200 + n100 * 100 + n50 * 50;
 
         if let Some(acc) = self.acc {
             let target_total = (acc * (n_objects * 6) as f64).round() as usize;
@@ -658,6 +657,12 @@ impl<'map> From<OsuPP<'map>> for ManiaPP<'map> {
             clock_rate,
             hitresult_priority,
         } = osu;
+
+        let score_value = n320.unwrap_or(0) * 320 
+        + n300.unwrap_or(0) * 300 
+        + n200.unwrap_or(0) * 200 
+        + n100.unwrap_or(0) * 100 
+        + n50.unwrap_or(0) * 50;
 
         Self {
             map: map.convert_mode(GameMode::Mania),
