@@ -191,7 +191,7 @@ impl<'map> ManiaPP<'map> {
     }
 
     #[inline]
-    pub fn score(mut self, score: usize) -> Self {
+    pub fn with_score(mut self, score: usize) -> Self {
         self.score = Some(score);
 
         self
