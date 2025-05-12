@@ -503,85 +503,129 @@ struct ManiaPpInner {
     state: ManiaScoreState,
 }
 
+impl ManiaScoreState {
+    fn total_hits(&self) -> i32 {
+        self.n50 + self.n100 + self.n200 + self.n300 + self.n320 + self.n_misses
+    }
+
+    fn accuracy(&self) -> f64 {
+        let total_hits = self.total_hits() as f64;
+        if total_hits == 0.0 {
+            return 0.0;
+        }
+
+        let numerator = (self.n50 * 50 + self.n100 * 100 + self.n200 * 200 + self.n300 * 300 + self.n320 * 320) as f64;
+        let denominator = total_hits * 320.0; // osu!mania uses 320 as max score per note
+
+        numerator / denominator
+    }
+}
+
 impl ManiaPpInner {
     fn calculate(self) -> ManiaPerformanceAttributes {
-        // * Arbitrary initial value for scaling pp in order to standardize distributions across game modes.
-        // * The specific number has no intrinsic meaning and can be adjusted as needed.
-        let mut multiplier = 8.0;
+        let mut multiplier = 1.1;
+        if self.mods.nf() { multiplier *= 0.9; }
+        if self.mods.ez() { multiplier *= 0.5; }
 
-        if self.mods.nf() {
-            multiplier *= 0.75;
-        }
+        let strain_value = self.compute_strain_value();
+        let acc_value = self.compute_acc_value();
 
-        if self.mods.ez() {
-            multiplier *= 0.5;
-        }
+        let pp = (strain_value.powf(1.1) + acc_value.powf(1.1)).powf(1.0 / 1.1) * multiplier;
 
-        let strain_base = self.compute_difficulty_value();
-        let acc_value = self.calculate_custom_accuracy();
+        ManiaPerformanceAttributes { difficulty: self.attrs, pp, pp_difficulty: strain_value }
+    }
 
-        let strain_multiplier = 1.0;
+    fn compute_strain_value(&self) -> f64 {
+        let strain_value = (5.0 * (self.attrs.stars / 0.2).max(1.0) - 4.0).powf(2.2) / 135.0;
+        let strain_value = strain_value * (1.0 + 0.1 * (self.state.total_hits() as f64 / 1500.0).min(1.0));
 
-        // * 2017 Mania PP System
-        let pp = ((strain_base * strain_multiplier).powf(1.1) + acc_value.powf(1.1)).powf(1.0 / 1.1) * multiplier * 1.1; 
-
-        // let difficulty_value = self.compute_difficulty_value();
-        // let pp = difficulty_value * multiplier;
-
-        ManiaPerformanceAttributes {
-            difficulty: self.attrs,
-            pp,
-            pp_difficulty: strain_base,
+        let score = self.state.score as f64;
+        match score {
+            s if s <= 500_000.0 => 0.0,
+            s if s <= 600_000.0 => strain_value * ((s - 500_000.0) / 100_000.0) * 0.3,
+            s if s <= 700_000.0 => strain_value * (0.3 + (s - 600_000.0) / 100_000.0 * 0.25),
+            s if s <= 800_000.0 => strain_value * (0.55 + (s - 700_000.0) / 100_000.0 * 0.20),
+            s if s <= 900_000.0 => strain_value * (0.75 + (s - 800_000.0) / 100_000.0 * 0.15),
+            _ => strain_value * (0.90 + (score - 900_000.0) / 100_000.0 * 0.10),
         }
     }
 
-    fn compute_difficulty_value(&self) -> f64 {
-        // * 2017 Mania PP System
-        let strain_value = (5.0 * (self.attrs.stars.powf(0.825)).max(1.0) - 4.0).powi(3) / 100_000.0;
+    fn compute_acc_value(&self) -> f64 {
+        let hit_window_300 = self.attrs.hit_window;
+        if hit_window_300 <= 0.0 {
+            return 0.0;
+        }
 
-        let length_bonus = 1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0);
+        let strain_value = self.compute_strain_value();
+        let score = self.state.score as f64;
+        let acc_value = (0.2 - (hit_window_300 - 34.0) * 0.006667).max(0.0) * strain_value;
 
-        strain_value * length_bonus
-        // // * Star rating to pp curve
-        // (self.attrs.stars - 0.15).max(0.05).powf(2.2)
-        //      // * From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
-        //      * (5.0 * self.calculate_custom_accuracy() - 4.0).max(0.0)
-        //      // * Length bonus, capped at 1500 notes
-        //      * (1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0))
+        let score_bonus = if score > 960_000.0 {
+            ((score - 960_000.0) / 40_000.0).powf(1.1)
+        } else {
+            0.0
+        };
+
+        acc_value * score_bonus * (1.15_f64.min((self.state.total_hits() as f64 / 1500.0).powf(0.3)))
     }
+    
+    // fn calculate(self) -> ManiaPerformanceAttributes {
+    //     // * Arbitrary initial value for scaling pp in order to standardize distributions across game modes.
+    //     // * The specific number has no intrinsic meaning and can be adjusted as needed.
+    //     let mut multiplier = 8.0;
+
+    //     if self.mods.nf() {
+    //         multiplier *= 0.75;
+    //     }
+
+    //     if self.mods.ez() {
+    //         multiplier *= 0.5;
+    //     }
+
+    //     let difficulty_value = self.compute_difficulty_value();
+    //     let pp = difficulty_value * multiplier;
+
+    //     ManiaPerformanceAttributes {
+    //         difficulty: self.attrs,
+    //         pp,
+    //         pp_difficulty: difficulty_value,
+    //     }
+    // }
+
+    // fn compute_difficulty_value(&self) -> f64 {
+    //     // * Star rating to pp curve
+    //     (self.attrs.stars - 0.15).max(0.05).powf(2.2)
+    //          // * From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
+    //          * (5.0 * self.calculate_custom_accuracy() - 4.0).max(0.0)
+    //          // * Length bonus, capped at 1500 notes
+    //          * (1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0))
+    // }
 
     fn total_hits(&self) -> f64 {
         self.state.total_hits() as f64
     }
 
-    fn calculate_custom_accuracy(&self) -> f64 {
-        let ManiaScoreState {
-            n320,
-            n300,
-            n200,
-            n100,
-            n50,
-            n_misses: _,
-        } = &self.state;
+    // fn calculate_custom_accuracy(&self) -> f64 {
+    //     let ManiaScoreState {
+    //         n320,
+    //         n300,
+    //         n200,
+    //         n100,
+    //         n50,
+    //         n_misses: _,
+    //     } = &self.state;
 
-        let total_hits = self.state.total_hits();
+    //     let total_hits = self.state.total_hits();
 
-        if total_hits == 0 {
-            return 0.0;
-        }
+    //     if total_hits == 0 {
+    //         return 0.0;
+    //     }
 
-        let accuracy = (*n320 * 32 + *n300 * 30 + *n200 * 20 + *n100 * 10 + *n50 * 5) as f64 / (total_hits * 32) as f64;
+    //     let numerator = *n320 * 32 + *n300 * 30 + *n200 * 20 + *n100 * 10 + *n50 * 5;
+    //     let denominator = total_hits * 32;
 
-        // * 2017 Mania PP System
-        let hit_window = self.attrs.hit_window;
-        let accuracy_value =  (150.0 / hit_window) * (accuracy.powi(16)).powf(1.8) * 2.5 * (1.15_f64.min((total_hits as f64 / 1500.0).powf(0.3)));
-
-        // let numerator = *n320 * 32 + *n300 * 30 + *n200 * 20 + *n100 * 10 + *n50 * 5;
-        // let denominator = total_hits * 32;
-
-        // numerator as f64 / denominator as f64
-        accuracy_value
-    }
+    //     numerator as f64 / denominator as f64
+    // }
 }
 
 impl<'map> From<OsuPP<'map>> for ManiaPP<'map> {
