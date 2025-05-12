@@ -201,7 +201,7 @@ impl<'map> ManiaPP<'map> {
 
     /// Provide parameters through an [`ManiaScoreState`].
     #[inline]
-    pub fn state(mut self, state: ManiaScoreState) -> Self {
+    pub fn state(mut self, state: &ManiaScoreState) -> Self {
         let ManiaScoreState {
             n320,
             n300,
@@ -671,7 +671,7 @@ impl<'map> From<OsuPP<'map>> for ManiaPP<'map> {
             n100,
             n50,
             n_misses,
-            score: score_value,
+            score: Some(score_value),
             acc,
             hitresult_priority,
         }
