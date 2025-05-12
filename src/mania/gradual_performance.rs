@@ -31,13 +31,13 @@ impl ManiaScoreState {
         Self::default()
     }
 
-    /// Return the total amount of hits by adding everything up.
+    // Return the total amount of hits by adding everything up.
     // #[inline]
     // pub fn total_hits(&self) -> usize {
     //     self.n320 + self.n300 + self.n200 + self.n100 + self.n50 + self.n_misses
     // }
 
-    /// Calculate the accuracy between `0.0` and `1.0` for this state.
+    // Calculate the accuracy between `0.0` and `1.0` for this state.
     // #[inline]
     // pub fn accuracy(&self) -> f64 {
     //     let total_hits = self.total_hits();

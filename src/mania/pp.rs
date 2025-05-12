@@ -190,6 +190,13 @@ impl<'map> ManiaPP<'map> {
         self
     }
 
+    #[inline]
+    pub fn score(mut self, score: usize) -> Self {
+        self.score = Some(score);
+
+        self
+    }
+
     /// Provide parameters through an [`ManiaScoreState`].
     #[inline]
     pub fn state(mut self, state: ManiaScoreState) -> Self {
@@ -200,6 +207,7 @@ impl<'map> ManiaPP<'map> {
             n100,
             n50,
             n_misses,
+            score,
         } = state;
 
         self.n320 = Some(n320);
@@ -493,6 +501,7 @@ impl<'map> ManiaPP<'map> {
             n100,
             n50,
             n_misses,
+            score,
         }
     }
 }
