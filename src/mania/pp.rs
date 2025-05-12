@@ -504,7 +504,7 @@ struct ManiaPpInner {
 }
 
 impl ManiaScoreState {
-    fn total_hits(&self) -> i32 {
+    fn total_hits(&self) -> usize {
         self.n50 + self.n100 + self.n200 + self.n300 + self.n320 + self.n_misses
     }
 
