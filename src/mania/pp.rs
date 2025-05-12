@@ -201,7 +201,7 @@ impl<'map> ManiaPP<'map> {
 
     /// Provide parameters through an [`ManiaScoreState`].
     #[inline]
-    pub fn state(mut self, state: &ManiaScoreState) -> Self {
+    pub fn state(mut self, state: ManiaScoreState) -> Self {
         let ManiaScoreState {
             n320,
             n300,
