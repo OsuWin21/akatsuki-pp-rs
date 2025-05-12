@@ -111,6 +111,8 @@ pub struct ScoreState {
     pub n50: usize,
     /// Amount of current misses (fruits + droplets for osu!catch).
     pub n_misses: usize,
+    /// Amount of score (for osu!mania).
+    pub score: usize,
 }
 
 impl ScoreState {
