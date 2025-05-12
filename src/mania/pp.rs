@@ -572,6 +572,7 @@ impl ManiaPpInner {
         // let denominator = total_hits * 32;
 
         // numerator as f64 / denominator as f64
+        accuracy_value
     }
 }
 
