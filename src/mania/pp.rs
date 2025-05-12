@@ -517,8 +517,16 @@ impl ManiaPpInner {
             multiplier *= 0.5;
         }
 
-        let difficulty_value = self.compute_difficulty_value();
-        let pp = difficulty_value * multiplier;
+        let strain_base = self.compute_difficulty_value();
+        let acc_value = self.calculate_custom_accuracy();
+
+        let strain_multiplier = 1.0;
+
+        // * 2017 Mania PP System
+        let pp = ((strain_base * strain_multiplier).powf(1.1) + acc_value.powf(1.1)).powf(1.0 / 1.1) * multiplier * 1.1; 
+
+        // let difficulty_value = self.compute_difficulty_value();
+        // let pp = difficulty_value * multiplier;
 
         ManiaPerformanceAttributes {
             difficulty: self.attrs,
