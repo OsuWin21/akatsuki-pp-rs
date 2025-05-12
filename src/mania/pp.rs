@@ -531,7 +531,7 @@ impl ManiaPpInner {
         ManiaPerformanceAttributes {
             difficulty: self.attrs,
             pp,
-            pp_difficulty: difficulty_value,
+            pp_difficulty: strain_base,
         }
     }
 
