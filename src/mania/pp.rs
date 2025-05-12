@@ -260,6 +260,8 @@ impl<'map> ManiaPP<'map> {
         let mut n50 = self.n50.unwrap_or(0);
         let n_misses = self.n_misses.unwrap_or(0);
 
+        let score_value = n320 * 320 + n300 * 300 + n200 * 200 + n100 * 100 + n50 * 50;
+
         if let Some(acc) = self.acc {
             let target_total = (acc * (n_objects * 6) as f64).round() as usize;
 

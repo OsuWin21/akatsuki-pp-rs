@@ -170,7 +170,7 @@ impl<'map> ManiaGradualPerformanceAttributes<'map> {
             .performance
             .clone()
             .attributes(difficulty)
-            .state(state)
+            .state(&state)
             .with_score(state.score)
             .passed_objects(self.difficulty.idx)
             .calculate();
