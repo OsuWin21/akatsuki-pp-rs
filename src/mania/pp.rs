@@ -669,7 +669,7 @@ impl<'map> From<OsuPP<'map>> for ManiaPP<'map> {
             n100,
             n50,
             n_misses,
-            score,
+            score: score_value,
             acc,
             hitresult_priority,
         }
