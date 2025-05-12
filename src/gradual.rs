@@ -111,8 +111,7 @@ pub struct ScoreState {
     pub n50: usize,
     /// Amount of current misses (fruits + droplets for osu!catch).
     pub n_misses: usize,
-    /// Amount of score (for osu!mania).
-    pub score: usize,
+    
 }
 
 impl ScoreState {
@@ -171,7 +170,7 @@ impl From<ScoreState> for ManiaScoreState {
             n100: state.n100,
             n50: state.n50,
             n_misses: state.n_misses,
-            score: state.score,
+
         }
     }
 }

@@ -20,8 +20,6 @@ pub struct ManiaScoreState {
     pub n50: usize,
     /// Amount of current misses.
     pub n_misses: usize,
-    /// Ammount of Scores.
-    pub score: usize,
 }
 
 impl ManiaScoreState {
@@ -31,26 +29,26 @@ impl ManiaScoreState {
         Self::default()
     }
 
-    // Return the total amount of hits by adding everything up.
-    // #[inline]
-    // pub fn total_hits(&self) -> usize {
-    //     self.n320 + self.n300 + self.n200 + self.n100 + self.n50 + self.n_misses
-    // }
+    /// Return the total amount of hits by adding everything up.
+    #[inline]
+    pub fn total_hits(&self) -> usize {
+        self.n320 + self.n300 + self.n200 + self.n100 + self.n50 + self.n_misses
+    }
 
-    // Calculate the accuracy between `0.0` and `1.0` for this state.
-    // #[inline]
-    // pub fn accuracy(&self) -> f64 {
-    //     let total_hits = self.total_hits();
+    /// Calculate the accuracy between `0.0` and `1.0` for this state.
+    #[inline]
+    pub fn accuracy(&self) -> f64 {
+        let total_hits = self.total_hits();
 
-    //     if total_hits == 0 {
-    //         return 0.0;
-    //     }
+        if total_hits == 0 {
+            return 0.0;
+        }
 
-    //     let numerator = 6 * (self.n320 + self.n300) + 4 * self.n200 + 2 * self.n100 + self.n50;
-    //     let denominator = 6 * total_hits;
+        let numerator = 6 * (self.n320 + self.n300) + 4 * self.n200 + 2 * self.n100 + self.n50;
+        let denominator = 6 * total_hits;
 
-    //     numerator as f64 / denominator as f64
-    // }
+        numerator as f64 / denominator as f64
+    }
 }
 
 /// Gradually calculate the performance attributes of an osu!mania map.
@@ -170,8 +168,7 @@ impl<'map> ManiaGradualPerformanceAttributes<'map> {
             .performance
             .clone()
             .attributes(difficulty)
-            .state(state.clone())
-            .with_score(state.score)
+            .state(state)
             .passed_objects(self.difficulty.idx)
             .calculate();
 
