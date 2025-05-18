@@ -507,7 +507,7 @@ impl OsuPpInner {
         // * Buff Stream Aim for AP
         if self.mods.ap() {
             let stream_aim_factor = self.attrs.speed_note_count / total_hits;
-            stream_multiplier = 1.0 + 0.3 * stream_aim_factor;
+            let stream_multiplier = 1.0 + 0.3 * stream_aim_factor;
             aim_value *= stream_multiplier
         } else {
             aim_value *= 1.0
