@@ -440,7 +440,9 @@ impl OsuPpInner {
         if self.mods.ap() {
             let stream_aim_factor = self.attrs.speed_note_count / total_hits;
             let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
-            aim_value *= stream_multiplier
+            aim_value *= stream_multiplier;
+            
+            aim_value
         }
 
         let pp = (aim_value.powf(1.1)
