@@ -400,16 +400,7 @@ impl OsuPpInner {
 
         let total_hits = total_hits as f64;
 
-        let mut GLOBAL_PP_MULTIPLIER = 2.0;
-
-        let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * GLOBAL_PP_MULTIPLIER; 
-
-        // Remove AP PP if EZ is enabled (THIS AP PP IS ALREADY EASY ENOUGH STUPID)
-        if self.mods.ez() && self.mods.ap() {
-            multiplier *= 0.0; 
-        } else if self.mods.ap() {
-            multiplier *= 1.5; // Buff AP PP
-        }
+        let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * 2.0;
 
         if self.mods.nf() {
             multiplier *= (1.0 - 0.02 * self.effective_miss_count).max(0.9);
@@ -467,10 +458,6 @@ impl OsuPpInner {
     fn compute_aim_value(&self) -> f64 {
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
 
-        if self.mods.ap() {
-            aim_value = 0.3; 
-        }
-
         let total_hits = self.total_hits();
 
         let len_bonus = 0.95
@@ -503,15 +490,6 @@ impl OsuPpInner {
             // * We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
             aim_value *= 1.0 + 0.04 * (12.0 - self.attrs.ar);
         }
-        
-        // * Buff Stream Aim for AP
-        if self.mods.ap() {
-            let stream_aim_factor = self.attrs.speed_note_count / total_hits;
-            let stream_multiplier = 1.0 + 0.3 * stream_aim_factor;
-            aim_value *= stream_multiplier
-        } else {
-            aim_value *= 1.0
-        }
 
         // * We assume 15% of sliders in a map are difficult since there's no way to tell from the performance calculator.
         let estimate_diff_sliders = self.attrs.n_sliders as f64 * 0.15;
@@ -528,31 +506,37 @@ impl OsuPpInner {
             aim_value *= slider_nerf_factor;
         }
 
+        if self.mods.ap() {
+            let stream_aim_factor = self.attrs.speed_note_count / total_hits;
+            let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
+            aim_value *= stream_multiplier
+        }
+
         // * Buff for lower AR when it comes to aim and EZ Mods.
         if self.mods.ez() {
             let mut base_buff = 1.5_f64;
-
+        
             if self.attrs.ar <= 8.0 {
                 base_buff += (8.0 - self.attrs.ar as f64) / 100.0;
             }
-
+                
             aim_value *= base_buff;
         }
 
         aim_value *= self.acc;
         // * It is important to consider accuracy difficulty when scaling with accuracy.
         aim_value *= 0.98 + self.attrs.od * self.attrs.od / 2500.0;
-        
+
         if self.mods.ap() {
-            aim_value * 3.0;
+            aim_value *= 0.3; 
         }
-        
+
         aim_value
     }
 
     fn compute_speed_value(&self) -> f64 {
         if self.mods.rx() {
-            return 0.3;
+            return 0.0;
         }
 
         let mut speed_value =
@@ -617,10 +601,6 @@ impl OsuPpInner {
                 * (self.state.n50 as f64 - total_hits / 500.0),
         );
 
-        if self.mods.ez() && self.mods.ap() {
-            speed_value *= 0.3; 
-        }
-        
         speed_value
     }
 
@@ -702,13 +682,8 @@ impl OsuPpInner {
     fn get_combo_scaling_factor(&self) -> f64 {
         if self.attrs.max_combo == 0 {
             1.0
-
-        // PLEASE..... AP IS STUPID
-        } else if self.mods.ap() {
-            ((self.state.max_combo as f64).powf(0.9) / (self.attrs.max_combo as f64).powf(0.9))
-                .min(1.0)
         } else {
-            ((self.state.max_combo as f64).powf(0.9) / (self.attrs.max_combo as f64).powf(0.9))
+            ((self.state.max_combo as f64).powf(0.8) / (self.attrs.max_combo as f64).powf(0.8))
                 .min(1.0)
         }
     }
