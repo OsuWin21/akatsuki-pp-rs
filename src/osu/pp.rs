@@ -437,6 +437,12 @@ impl OsuPpInner {
         let acc_value = self.compute_accuracy_value();
         let flashlight_value = self.compute_flashlight_value();
 
+        if self.mods.ap() {
+            let stream_aim_factor = self.attrs.speed_note_count / total_hits;
+            let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
+            aim_value *= stream_multiplier
+        }
+
         let pp = (aim_value.powf(1.1)
             + speed_value.powf(1.1)
             + acc_value.powf(1.1)
@@ -506,11 +512,6 @@ impl OsuPpInner {
             aim_value *= slider_nerf_factor;
         }
 
-        if self.mods.ap() {
-            let stream_aim_factor = self.attrs.speed_note_count / total_hits;
-            let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
-            aim_value *= stream_multiplier
-        }
 
         // * Buff for lower AR when it comes to aim and EZ Mods.
         if self.mods.ez() {
