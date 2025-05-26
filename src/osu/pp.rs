@@ -528,8 +528,7 @@ impl OsuPpInner {
             let stream_aim_factor = self.attrs.speed_note_count * self.attrs.stars / 1000.0;
             let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
             aim_value *= stream_multiplier;
-
-            aim_value
+            
         }
 
         aim_value
