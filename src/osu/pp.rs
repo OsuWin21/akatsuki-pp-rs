@@ -437,13 +437,6 @@ impl OsuPpInner {
         let mut acc_value = self.compute_accuracy_value();
         let mut flashlight_value = self.compute_flashlight_value();
 
-        if self.mods.ap() {
-            let stream_aim_factor = self.attrs.speed_note_count / total_hits;
-            let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
-            aim_value *= stream_multiplier;
-
-            return aim_value;
-        }
 
         let pp = (aim_value.powf(1.1)
             + speed_value.powf(1.1)
@@ -531,7 +524,12 @@ impl OsuPpInner {
         aim_value *= 0.98 + self.attrs.od * self.attrs.od / 2500.0;
 
         if self.mods.ap() {
-            aim_value *= 0.3; 
+            aim_value *= 0.3;
+            let stream_aim_factor = self.attrs.speed_note_count * self.attrs.stars / 1000.0;
+            let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
+            aim_value *= stream_multiplier;
+
+            aim_value
         }
 
         aim_value
