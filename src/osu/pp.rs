@@ -432,10 +432,10 @@ impl OsuPpInner {
                 .min(total_hits);
         }
 
-        let aim_value = self.compute_aim_value();
-        let speed_value = self.compute_speed_value();
-        let acc_value = self.compute_accuracy_value();
-        let flashlight_value = self.compute_flashlight_value();
+        let mut aim_value = self.compute_aim_value();
+        let mut speed_value = self.compute_speed_value();
+        let mut acc_value = self.compute_accuracy_value();
+        let mut flashlight_value = self.compute_flashlight_value();
 
         if self.mods.ap() {
             let stream_aim_factor = self.attrs.speed_note_count / total_hits;
