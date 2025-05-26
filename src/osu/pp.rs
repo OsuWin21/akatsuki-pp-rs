@@ -523,14 +523,6 @@ impl OsuPpInner {
         // * It is important to consider accuracy difficulty when scaling with accuracy.
         aim_value *= 0.98 + self.attrs.od * self.attrs.od / 2500.0;
 
-        if self.mods.ap() {
-            aim_value *= 0.3;
-            let stream_aim_factor = self.attrs.speed_note_count * self.attrs.stars / 1000.0;
-            let stream_multiplier = 1.0 + 0.2 * stream_aim_factor;
-            aim_value *= stream_multiplier;
-            
-        }
-
         aim_value
     }
 
