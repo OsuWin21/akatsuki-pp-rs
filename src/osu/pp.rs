@@ -400,7 +400,9 @@ impl OsuPpInner {
 
         let total_hits = total_hits as f64;
 
-        let global_multiplier = if self.mods.ap() || self.mods.rx() {
+        let global_multiplier = if self.mods.ap() {
+            1.3
+        } else if self.mods.rx() {
             1.2
         } else {
             2.0
