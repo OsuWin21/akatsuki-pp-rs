@@ -533,7 +533,7 @@ impl ManiaPpInner {
              // * From 80% accuracy, 1/20th of total pp is awarded per additional 1% accuracy
              * (5.0 * self.calculate_custom_accuracy() - 4.0).max(0.0)
              // * Length bonus, capped at 1500 notes
-             * (1.0 + 0.1 * (self.total_hits() / 1500.0).min(1.0))
+             * (1.0 + 0.1 * (self.total_hits() / 3000.0).min(1.0))
     }
 
     fn total_hits(&self) -> f64 {

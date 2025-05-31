@@ -400,7 +400,13 @@ impl OsuPpInner {
 
         let total_hits = total_hits as f64;
 
-        let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * 2.0;
+        if self.mods.ap() || self.mods.rx() {
+            let global_multiplier = 1.2;
+        } else {
+            let global_multiplier = 2.0;
+        }
+
+        let mut multiplier = PERFORMANCE_BASE_MULTIPLIER * global_multiplier;
 
         if self.mods.nf() {
             multiplier *= (1.0 - 0.02 * self.effective_miss_count).max(0.9);
@@ -457,6 +463,9 @@ impl OsuPpInner {
     }
 
     fn compute_aim_value(&self) -> f64 {
+        if self.mods.ap() {
+            return 0.2;
+        }
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
 
         let total_hits = self.total_hits();
@@ -491,6 +500,20 @@ impl OsuPpInner {
             // * We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
             aim_value *= 1.0 + 0.04 * (12.0 - self.attrs.ar);
         }
+
+        // Buff Stream aim maybe?
+        let stream_multiplier = if self.mods.ap() {
+            let stream_factor = if total_hits > 0.0 {
+                self.attrs.speed_note_count / total_hits
+            } else {
+                0.0
+            };
+            1.0 + 0.3 * stream_factor
+        } else {
+            1.0
+        };
+
+        aim_value *= stream_multiplier;
 
         // * We assume 15% of sliders in a map are difficult since there's no way to tell from the performance calculator.
         let estimate_diff_sliders = self.attrs.n_sliders as f64 * 0.15;
