@@ -242,7 +242,7 @@ impl<'m> OsuPP<'m> {
         self.assert_hitresults();
 
         let total_hits = self.total_hits() as f32;
-        let mut multiplier = 1.5;
+        let mut multiplier = 1.0;
 
         let effective_miss_count = self.calculate_effective_miss_count();
 
