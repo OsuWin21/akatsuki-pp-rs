@@ -73,7 +73,9 @@ impl OsuGradualDifficultyAttributes {
     pub fn new(map: &Beatmap, mods: u32) -> Self {
         let clock_rate = mods.clock_rate();
         let map_attrs = map.attributes().mods(mods).build();
-        let scaling_factor = ScalingFactor::new(map_attrs.cs);
+        
+        // * Added AP for determining the scaling factor.
+        let scaling_factor = ScalingFactor::new(map_attrs.cs, mods.ap());
         let hr = mods.hr();
         let hit_window = 2.0 * map_attrs.hit_windows.od;
         let time_preempt = (map_attrs.hit_windows.ar * clock_rate) as f32 as f64;
