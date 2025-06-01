@@ -661,7 +661,7 @@ impl OsuPpInner {
         } else {
             // * If there are no AP mods, we use a default formula.
             1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(24) * 2.83
-        }
+        };
 
         // * Bonus for many hitcircles - it's harder to keep good accuracy up for longer.
         acc_value *= (amount_hit_objects_with_acc as f64 / 1000.0)
