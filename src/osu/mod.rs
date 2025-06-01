@@ -253,7 +253,7 @@ fn calculate_skills(params: OsuStars<'_>) -> (Skills, OsuDifficultyAttributes) {
     let clock_rate = clock_rate.unwrap_or_else(|| mods.clock_rate());
 
     let map_attrs = map.attributes().mods(mods).clock_rate(clock_rate).build();
-    let scaling_factor = ScalingFactor::new(map_attrs.cs);
+    let scaling_factor = ScalingFactor::new(map_attrs.cs, mods.ap());
     let hr = mods.hr();
     let hit_window = 2.0 * map_attrs.hit_windows.od;
     let time_preempt = (map_attrs.hit_windows.ar * clock_rate) as f32 as f64;
