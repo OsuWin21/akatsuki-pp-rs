@@ -655,9 +655,13 @@ impl OsuPpInner {
             0.0
         };
 
-        // * Lots of arbitrary values from testing.
-        // * Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution.
-        let mut acc_value = 1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(24) * 2.83;
+        // * Make Accuracy value more punishing for lower accuracies in AP mods.
+        let mut acc_value = if self.mods.ap() {
+            1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(26) * 2.83;
+        } else {
+            // * If there are no AP mods, we use a default formula.
+            1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(24) * 2.83;
+        }
 
         // * Bonus for many hitcircles - it's harder to keep good accuracy up for longer.
         acc_value *= (amount_hit_objects_with_acc as f64 / 1000.0)
