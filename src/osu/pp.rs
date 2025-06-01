@@ -472,7 +472,7 @@ impl OsuPpInner {
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
         
         aim_value *= if self.mods.ap() {
-            0.4
+            0.5
         } else {
             1.0
         };
@@ -517,7 +517,7 @@ impl OsuPpInner {
             } else {
                 0.0
             };
-            1.0 + 0.3 * stream_factor
+            1.0 + 0.5 * stream_factor
         } else {
             1.0
         };
@@ -568,7 +568,7 @@ impl OsuPpInner {
         }
 
         let mut speed_value =
-            (5.0 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
+            (5.5 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
 
         let total_hits = self.total_hits();
 
