@@ -568,10 +568,10 @@ impl OsuPpInner {
         }
 
         let mut speed_value = if self.mods.ap() {
-            (5.4 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
+            (5.4 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0
         } else {
-            (5.0 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
-        }
+            (5.0 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0
+        };
 
         let total_hits = self.total_hits();
 
