@@ -300,7 +300,7 @@ impl TaikoPpInner {
         let diff_value = self.compute_difficulty_value(effective_miss_count);
         let acc_value = self.compute_accuracy_value();
 
-        let pp = (diff_value.powf(1.1) + acc_value.powf(1.1)).powf(1.0 / 1.1) * multiplier;
+        let pp = (diff_value.powf(1.1) + acc_value.powf(1.1)).powf(1.0 / 1.1) * multiplier * 2.0;
 
         TaikoPerformanceAttributes {
             difficulty: self.attrs,

@@ -403,6 +403,8 @@ impl CatchPPInner {
             pp *= 0.9;
         }
 
+        pp *= 2.0;
+
         CatchPerformanceAttributes {
             difficulty: self.attributes,
             pp,

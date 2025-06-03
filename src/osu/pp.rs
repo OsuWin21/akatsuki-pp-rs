@@ -465,8 +465,9 @@ impl OsuPpInner {
     }
 
     fn compute_aim_value(&self) -> f64 {
+        // * EZAP NERF
         if self.mods.ap() && self.mods.ez() {
-            return 0.0;
+            return 0.2;
         }
 
         let mut aim_value = (5.0 * (self.attrs.aim / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
@@ -563,14 +564,15 @@ impl OsuPpInner {
             return 0.0;
         }
 
-        if self.mods.ap() && self.mods.ez() {
-            return 0.5;
-        }
-
         let mut speed_value = if self.mods.ap() {
             (5.4 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0
         } else {
             (5.0 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0
+        };
+        
+        // * EZAP NERF
+        speed_value *= if self.mods.ap() && self.mods.ez() {
+            0.5
         };
 
         let total_hits = self.total_hits();

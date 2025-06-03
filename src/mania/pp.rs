@@ -518,7 +518,7 @@ impl ManiaPpInner {
         }
 
         let difficulty_value = self.compute_difficulty_value();
-        let pp = difficulty_value * multiplier;
+        let pp = difficulty_value * multiplier * 2.0;
 
         ManiaPerformanceAttributes {
             difficulty: self.attrs,
