@@ -517,7 +517,7 @@ impl OsuPpInner {
             } else {
                 0.0
             };
-            1.0 + 0.5 * stream_factor
+            1.0 + 0.7 * stream_factor
         } else {
             1.0
         };
@@ -567,8 +567,11 @@ impl OsuPpInner {
             return 0.5;
         }
 
-        let mut speed_value =
-            (5.5 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
+        let mut speed_value = if self.mods.ap() {
+            (5.4 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
+        } else {
+            (5.0 * (self.attrs.speed / 0.0675).max(1.0) - 4.0).powi(3) / 100_000.0;
+        }
 
         let total_hits = self.total_hits();
 
@@ -657,7 +660,7 @@ impl OsuPpInner {
 
         // * Make Accuracy value more punishing for lower accuracies in AP mods.
         let mut acc_value = if self.mods.ap() {
-            1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(26) * 2.83
+            1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(28) * 2.83
         } else {
             // * If there are no AP mods, we use a default formula.
             1.52163_f64.powf(self.attrs.od) * better_acc_percentage.powi(24) * 2.83
